@@ -80,7 +80,7 @@ class IBMCloudStorage(S3Storage):
             aws_cli_path = self.config.aws_cli_path
 
         try:
-            subprocess.check_call([aws_cli_path, "help"], stdout=PIPE, stderr=PIPE)
+            subprocess.check_call([aws_cli_path, '--version'], stdout=PIPE, stderr=PIPE)
         except Exception:
             raise RuntimeError(
                 "AWS cli doesn't seem to be installed on this system and is a "
