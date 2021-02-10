@@ -46,7 +46,7 @@ RUN python3 -m pip install -U pip && pip3 install --ignore-installed --user -r /
 FROM ubuntu:18.04
 
 ## add user
-RUN addgroup --system medusa && adduser --system --group medusa
+RUN addgroup --system medusa && adduser --system --group medusa --uid=1001
 # RUN chown -R medusa:medusa /app && chmod -R 755 /app
 
 COPY --from=base /install /usr/local
