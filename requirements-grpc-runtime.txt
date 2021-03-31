@@ -1,2 +1,2 @@
-grpcio>=1.29.0
-grpcio-health-checking>=1.29.0
+grpcio>=1.36.1
+grpcio-health-checking>=1.36.1

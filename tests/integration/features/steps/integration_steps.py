@@ -787,6 +787,158 @@ def i_am_using_storage_provider_with_grpc_server_and_mgmt_api(context, storage_p
             time.sleep(1)
 
 
+# @given(r'I am using "{storage_provider}" as storage provider in ccm cluster "{client_encryption}" with mgmt api and fqdn "{fqdn}"')
+# def foo_am_using_storage_provider_with_grpc_server_and_mgmt_api_and_fqdn(context, storage_provider, client_encryption,
+#                                                                        fqdn):
+#     logging.info("Starting the tests")
+#     if not hasattr(context, "cluster_name"):
+#         context.cluster_name = "test"
+#     config = configparser.ConfigParser(interpolation=None)
+#
+#     if storage_provider == "local":
+#         if os.path.isdir(os.path.join("/tmp", "medusa_it_bucket")):
+#             shutil.rmtree(os.path.join("/tmp", "medusa_it_bucket"))
+#         os.makedirs(os.path.join("/tmp", "medusa_it_bucket"))
+#
+#         config["storage"] = {
+#             "host_file_separator": ",",
+#             "bucket_name": "medusa_it_bucket",
+#             "key_file": "",
+#             "storage_provider": "local",
+#             "fqdn": fqdn,
+#             "api_key_or_username": "",
+#             "api_secret_or_password": "",
+#             "base_path": "/tmp",
+#             "prefix": storage_prefix
+#         }
+#     elif storage_provider == "google_storage":
+#         config["storage"] = {
+#             "host_file_separator": ",",
+#             "bucket_name": "medusa-integration-tests",
+#             "key_file": "~/medusa_credentials.json",
+#             "storage_provider": "google_storage",
+#             "fqdn": "127.0.0.1",
+#             "api_key_or_username": "",
+#             "api_secret_or_password": "",
+#             "base_path": "/tmp",
+#             "prefix": storage_prefix
+#         }
+#     elif storage_provider.startswith("s3"):
+#         config["storage"] = {
+#             "host_file_separator": ",",
+#             "bucket_name": "tlp-medusa-dev",
+#             "key_file": "~/.aws/credentials",
+#             "storage_provider": storage_provider,
+#             "fqdn": "127.0.0.1",
+#             "api_key_or_username": "",
+#             "api_secret_or_password": "",
+#             "api_profile": "default",
+#             "base_path": "/tmp",
+#             "multi_part_upload_threshold": 1 * 1024,
+#             "concurrent_transfers": 4,
+#             "prefix": storage_prefix,
+#             "aws_cli_path": "aws"
+#         }
+#
+#     config["cassandra"] = {
+#         "is_ccm": 1,
+#         "stop_cmd": "ccm stop",
+#         "start_cmd": "ccm start",
+#         "cql_username": "cassandra",
+#         "cql_password": "cassandra",
+#         "config_file": os.path.expanduser(
+#             os.path.join(
+#                 "~/.ccm", context.cluster_name, "node1", "conf", "cassandra.yaml"
+#             )
+#         ),
+#         "sstableloader_bin": os.path.expanduser(
+#             os.path.join(
+#                 "~/.ccm",
+#                 "repository",
+#                 context.cassandra_version,
+#                 "bin",
+#                 "sstableloader",
+#             )
+#         ),
+#         "resolve_ip_addresses": False
+#     }
+#
+#     if client_encryption == 'with_client_encryption':
+#         config["cassandra"].update(
+#             {
+#                 "certfile": certfile,
+#                 "usercert": usercert,
+#                 "userkey": userkey,
+#                 "sstableloader_ts": trustore_path,
+#                 "sstableloader_tspw": "truststorePass1",
+#                 "sstableloader_ks": keystore_path,
+#                 "sstableloader_kspw": "testdata1"
+#             }
+#         )
+#
+#     config["monitoring"] = {"monitoring_provider": "local"}
+#
+#     config["checks"] = {
+#         "health_check": "cql"
+#     }
+#
+#     config["grpc"] = {
+#         "enabled": 1,
+#     }
+#
+#     config['kubernetes'] = {
+#         "enabled": 1,
+#         "cassandra_url": "http://127.0.0.1:8080/api/v0/ops/node/snapshots",
+#         "use_mgmt_api": 1,
+#     }
+#
+#     GRPCServer.destroy()
+#     context.grpc_server = GRPCServer.init(config)
+#
+#     context.grpc_client = medusa.service.grpc.client.Client(
+#         "127.0.0.1:50051",
+#         channel_options=[('grpc.enable_retries', 0)]
+#     )
+#
+#     MgmtApiServer.destroy()
+#     context.mgmt_api_server = MgmtApiServer.init(config, context.cluster_name)
+#
+#     context.medusa_config = MedusaConfig(
+#         storage=_namedtuple_from_dict(StorageConfig, config["storage"]),
+#         cassandra=_namedtuple_from_dict(CassandraConfig, config["cassandra"]),
+#         monitoring=_namedtuple_from_dict(MonitoringConfig, config["monitoring"]),
+#         ssh=None,
+#         checks=_namedtuple_from_dict(ChecksConfig, config["checks"]),
+#         logging=None,
+#         grpc=_namedtuple_from_dict(GrpcConfig, config["grpc"]),
+#         kubernetes=_namedtuple_from_dict(KubernetesConfig, config['kubernetes']),
+#     )
+#
+#     cleanup_storage(context, storage_provider)
+#
+#     is_client_encryption_enable = False
+#     if client_encryption == 'with_client_encryption':
+#         is_client_encryption_enable = True
+#
+#     # sleep for a few seconds to give gRPC server a chance to initialize
+#     ready_count = 0
+#     while ready_count < 20:
+#         ready = 0
+#         try:
+#             ready = requests.get("http://127.0.0.1:8080/api/v0/probes/readiness").status_code
+#         except Exception:
+#             # wait for the server to be ready
+#             time.sleep(1)
+#         ready_count += 1
+#         if ready == 200:
+#             # server is ready, re-establish the session
+#             context.session = connect_cassandra(is_client_encryption_enable)
+#             break
+#         else:
+#             # wait for Cassandra to be ready
+#             time.sleep(1)
+
+
 @when(r'I create the "{table_name}" table in keyspace "{keyspace_name}"')
 def _i_create_the_whatever_table(context, table_name, keyspace_name):
     keyspace = """CREATE KEYSPACE IF NOT EXISTS {} WITH replication = {{'class':'SimpleStrategy',
@@ -855,6 +1007,12 @@ def _i_verify_over_grpc_backup_exists(context, backup_name):
             break
     assert found is True
 
+@then(r'I verify that the backup "{backup_name}" exists with the new fqdn "{fqdn}"')
+def _i_verify_backup_exists_with_new_fqdn(context, backup_name, fqdn):
+    response = context.grpc_client.get_backup_status(backup_name)
+    assert fqdn in response.finishedNodes
+
+
 
 @then(r'I delete the backup "{backup_name}" over gRPC')
 def _i_delete_backup_grpc(context, backup_name):
@@ -880,6 +1038,10 @@ def _i_verify_over_grpc_backup_does_not_exist(context, backup_name):
 def _check_grpc_server_is_up(context):
     resp = context.grpc_client.health_check()
     assert resp.status == 1
+
+@then(r'reload the gRPC server config')
+def _i_reload_the_grpc_server_config(context):
+    context.grpc_client.reload_config()
 
 
 @then(r'I shutdown the gRPC server')

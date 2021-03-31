@@ -8,6 +8,8 @@ service Medusa {
     rpc DeleteBackup(DeleteBackupRequest) returns (DeleteBackupResponse);
 
     rpc GetBackups(GetBackupsRequest) returns (GetBackupsResponse);
+
+    rpc ReloadConfig(ReloadConfigRequest) returns (ReloadConfigResponse);
 }
 
 message BackupRequest {
@@ -56,4 +58,10 @@ message BackupSummary {
     int64 finishTime = 3;
     int32 totalNodes = 4;
     int32 finishedNodes = 5;
+}
+
+message ReloadConfigRequest {
+}
+
+message ReloadConfigResponse {
 }

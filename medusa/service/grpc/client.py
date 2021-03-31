@@ -53,6 +53,13 @@ class Client:
         response = stub.GetBackups(request)
         return response.backups
 
+    def get_backup_status(self, backup_name):
+        stub = medusa_pb2_grpc.MedusaStub(self.channel)
+        request = medusa_pb2.BackupStatusRequest(backup_name)
+        response = stub.BackupStatus(request)
+        medusa_pb2.BackupStatusResponse()
+        return response
+
     def backup_exists(self, name):
         stub = medusa_pb2_grpc.MedusaStub(self.channel)
         try:
@@ -63,3 +70,9 @@ class Client:
             if e.code() == grpc.StatusCode.NOT_FOUND:
                 return False
             raise e
+
+    def reload_config(self):
+        stub = medusa_pb2_grpc.MedusaStub(self.channel)
+        request = medusa_pb2.ReloadConfigRequest()
+        stub.ReloadConfig(request)
+        return True

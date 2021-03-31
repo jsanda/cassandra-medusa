@@ -113,6 +113,17 @@ class MedusaService(medusa_pb2_grpc.MedusaServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             logging.exception("Deleting backup {} failed".format(request.name))
 
+        return resp\
+
+    def ReloadConfig(self, request, context):
+        logging.info("reloading config")
+        resp = medusa_pb2.ReloadConfigResponse()
+        try:
+            self.config = create_config(config_file_path)
+        except Exception as e:
+            context.set_details("failed to reload config: {}".format(e))
+            context.set_code(grpc.StatusCode.INTERNAL)
+            logging.exception("failed to reload config")
         return resp
 
 
